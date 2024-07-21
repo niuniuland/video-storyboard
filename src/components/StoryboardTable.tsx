@@ -4,6 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { X, Plus, Edit, Save } from "lucide-react";
 import ImageUpload from './ImageUpload';
+import { saveAs } from 'file-saver';
+
 
 const StoryboardTable = forwardRef(({ data, setData }, ref) => {
     const [highlightedIndex, setHighlightedIndex] = useState(0);
@@ -124,11 +126,41 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
         setData([...data, { id: Date.now(), shot: '', angle: '', camera: '', movement: '', content: '', script: '', duration: '', image: '' }]);
     };
 
+    const exportToHTML = () => {
+        let html = `<table border="1">
+            <tr><th>镜号</th><th>图片</th><th>景别</th><th>机位</th><th>运镜</th><th>镜头分析</th></tr>`;
+
+        data.forEach(row => {
+            const imageHtml = row.image ? `<img src="${row.image}" alt="镜头${row.shot}" style="max-width:100px;">` : '';
+            html += `<tr>
+                <td>${row.shot}</td>
+                <td>${imageHtml}</td>
+                <td>${row.angle}</td>
+                <td>${row.camera}</td>
+                <td>${row.movement}</td>
+                <td>${row.script}</td>
+            </tr>`;
+        });
+
+        html += '</table>';
+        return html;
+    };
+
+    const handleExportHTML = () => {
+        const html = exportToHTML();
+        const blob = new Blob([html], { type: 'text/html' });
+        saveAs(blob, 'storyboard.html');
+    };
+
+
     return (
         <div className="overflow-hidden" style={{ height: 'calc(70vh - 100px)' }}>
             <div className="flex justify-between items-center mb-4">
                 <Button onClick={toggleEditMode} variant="outline" className="text-white border-gray-600 hover:bg-gray-700">
                     {editMode ? <><Save className="mr-2 h-4 w-4" /> 保存</> : <><Edit className="mr-2 h-4 w-4" /> 编辑</>}
+                </Button>
+                <Button onClick={handleExportHTML} variant="outline" className="text-white border-gray-600 hover:bg-gray-700">
+                    导出 HTML
                 </Button>
                 {editMode && (
                     <Button onClick={addRow} variant="outline" className="text-white border-gray-600 hover:bg-gray-700">
