@@ -3,8 +3,10 @@
 import { useRef, useState } from 'react'
 import StoryboardTable from '../components/StoryboardTable'
 import FileUpload from '../components/FileUpload'
-import VideoRecorder from '../components/VideoRecorder'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import dynamic from 'next/dynamic';
+
+const VideoRecorder = dynamic(() => import('../components/VideoRecorder'), { ssr: false });
 
 export default function Home() {
   const [data, setData] = useState([])
