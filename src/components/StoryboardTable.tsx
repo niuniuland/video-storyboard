@@ -164,7 +164,7 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
                                     {editMode && !row.image && <ImageUpload onUpload={(url) => handleImageUpload(index, url)} />}
                                     {row.image && (
                                         <div className="relative group">
-                                            <img src={row.image} alt="Scene" className="w-full h-16 object-cover rounded" />
+                                            <img src={row.image} alt="Scene" className="w-full h-16 object-cover rounded" style={{ objectFit: 'cover' }} />
                                             {editMode && (
                                                 <Button
                                                     variant="destructive"

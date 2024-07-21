@@ -51,7 +51,7 @@ const VideoRecorder = ({ tableRef }) => {
         if (tableRef.current && tableRef.current.getContainer) {
             const container = tableRef.current.getContainer();
             if (container) {
-                const canvas = await html2canvas(container);
+                const canvas = await html2canvas(container, { scale: 1 });
                 const imageData = canvas.toDataURL('image/jpeg');
                 framesRef.current.push(imageData);
                 console.log(`Captured frame ${framesRef.current.length}, data length: ${imageData.length}`);
