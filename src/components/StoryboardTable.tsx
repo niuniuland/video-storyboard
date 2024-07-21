@@ -99,7 +99,7 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
                 />
             );
         }
-        return <div style={cellStyle} className="text-gray-300 text-center">{row[field]}</div>;
+        return <div style={cellStyle} className="text-gray-100 text-center">{row[field]}</div>;
     };
 
     const handleInputChange = (index, field, value) => {
@@ -147,18 +147,18 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
                 <Table className="border-gray-700">
                     <TableHeader className="sticky top-0 bg-gray-800 z-10">
                         <TableRow className="border-b border-gray-700">
-                            <TableHead style={{ width: '60px' }} className="text-gray-300 font-bold text-center">镜号</TableHead>
-                            <TableHead style={{ width: '120px' }} className="text-gray-300 font-bold text-center">画面</TableHead>
-                            <TableHead style={{ width: '60px' }} className="text-gray-300 font-bold text-center">景别</TableHead>
-                            <TableHead style={{ width: '60px' }} className="text-gray-300 font-bold text-center">机位</TableHead>
-                            <TableHead style={{ width: '60px' }} className="text-gray-300 font-bold text-center">运镜</TableHead>
-                            <TableHead style={{ width: '240px' }} className="text-gray-300 font-bold text-center">镜头分析</TableHead>
+                            <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">镜号</TableHead>
+                            <TableHead style={{ width: '120px' }} className="text-gray-100 font-bold text-center">画面</TableHead>
+                            <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">景别</TableHead>
+                            <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">机位</TableHead>
+                            <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">运镜</TableHead>
+                            <TableHead style={{ width: '240px' }} className="text-gray-100 font-bold text-center">镜头分析</TableHead>
                         </TableRow>
                     </TableHeader>
 
                     <TableBody>
                         {data.map((row, index) => (
-                            <TableRow key={row.id} className={`border-b border-gray-700 ${index === highlightedIndex ? 'bg-cyan-800 bg-opacity-50' : 'bg-gray-800'}`}>
+                            <TableRow key={row.id} className={`border-b border-gray-700 ${index === highlightedIndex ? 'bg-sky-700' : 'bg-gray-800'}`}>
                                 <TableCell className='p-2 border-r border-gray-700'>{renderCell(row, index, 'shot', '60px')}</TableCell>
                                 <TableCell className='p-2 border-r border-gray-700' style={{ width: '120px' }}>
                                     {editMode && !row.image && <ImageUpload onUpload={(url) => handleImageUpload(index, url)} />}
