@@ -17,8 +17,8 @@ export default function Home() {
   }
 
   return (
-    <main className="container mx-auto p-0 mt-8 max-w-3xl bg-gray-900 dark">
-      <Card className="bg-gray-800 text-white border-gray-700">
+    <main className="container mx-auto p-0 mt-8 max-w-2xl dark">
+      <Card className="bg-black text-white">
         <CardHeader className="border-b border-gray-700">
           <CardTitle className="text-2xl font-bold">视频分镜头拆解</CardTitle>
         </CardHeader>

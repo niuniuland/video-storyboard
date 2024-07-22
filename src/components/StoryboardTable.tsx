@@ -96,12 +96,12 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
                 <Input
                     value={row[field]}
                     onChange={(e) => handleInputChange(index, field, e.target.value)}
-                    className="w-full bg-gray-700 text-white border-gray-600"
+                    className="w-full bg-gray-700 text-white border-white"
                     style={cellStyle}
                 />
             );
         }
-        return <div style={cellStyle} className="text-gray-100 text-center">{row[field]}</div>;
+        return <div style={cellStyle} className="text-gray-100 text-center text-lg">{row[field]}</div>;
     };
 
     const handleInputChange = (index, field, value) => {
@@ -156,14 +156,14 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
     return (
         <div className="overflow-hidden" style={{ height: 'calc(70vh - 100px)' }}>
             <div className="flex justify-between items-center mb-4">
-                <Button onClick={toggleEditMode} variant="outline" className="text-white border-gray-600 hover:bg-gray-700">
+                <Button onClick={toggleEditMode} variant="outline" className="text-white border-white hover:bg-gray-700">
                     {editMode ? <><Save className="mr-2 h-4 w-4" /> 保存</> : <><Edit className="mr-2 h-4 w-4" /> 编辑</>}
                 </Button>
-                <Button onClick={handleExportHTML} variant="outline" className="text-white border-gray-600 hover:bg-gray-700">
+                <Button onClick={handleExportHTML} variant="outline" className="text-white border-white hover:bg-gray-700">
                     导出 HTML
                 </Button>
                 {editMode && (
-                    <Button onClick={addRow} variant="outline" className="text-white border-gray-600 hover:bg-gray-700">
+                    <Button onClick={addRow} variant="outline" className="text-white border-white hover:bg-gray-700">
                         <Plus className="mr-2 h-4 w-4" /> 添加行
                     </Button>
                 )}
@@ -176,13 +176,12 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
                     overflowY: 'scroll',
                 }}
             >
-                <Table className="border-gray-700">
-                    <TableHeader className="sticky top-0 bg-gray-800 z-10">
-                        <TableRow className="border-b border-gray-700">
+                <Table className="border-white">
+                    <TableHeader className="sticky top-0 bg-black z-10">
+                        <TableRow className="border-b-2 border-white text-lg">
                             <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">镜号</TableHead>
                             <TableHead style={{ width: '120px' }} className="text-gray-100 font-bold text-center">画面</TableHead>
                             <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">景别</TableHead>
-                            <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">机位</TableHead>
                             <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">运镜</TableHead>
                             <TableHead style={{ width: '240px' }} className="text-gray-100 font-bold text-center">镜头分析</TableHead>
                         </TableRow>
@@ -190,9 +189,10 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
 
                     <TableBody>
                         {data.map((row, index) => (
-                            <TableRow key={row.id} className={`border-b border-gray-700 ${index === highlightedIndex ? 'bg-sky-700' : 'bg-gray-800'}`}>
-                                <TableCell className='p-2 border-r border-gray-700'>{renderCell(row, index, 'shot', '60px')}</TableCell>
-                                <TableCell className='p-2 border-r border-gray-700' style={{ width: '120px' }}>
+                            <TableRow key={row.id} className={`border-b-2 border-white ${index === highlightedIndex ? 'bg-slate-800 highlighted-row' : 'bg-black'}`}>
+                            {/* <TableRow key={row.id} className={`border-b-2 border-white bg-black`}> */}
+                                <TableCell className='p-2 border-r-2 border-white'>{renderCell(row, index, 'shot', '60px')}</TableCell>
+                                <TableCell className='p-2 border-r-2 border-white' style={{ width: '120px' }}>
                                     {editMode && !row.image && <ImageUpload onUpload={(url) => handleImageUpload(index, url)} />}
                                     {row.image && (
                                         <div className="relative group">
@@ -210,9 +210,8 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
                                         </div>
                                     )}
                                 </TableCell>
-                                <TableCell className='p-2 border-r border-gray-700'>{renderCell(row, index, 'angle', '60px')}</TableCell>
-                                <TableCell className='p-2 border-r border-gray-700'>{renderCell(row, index, 'camera', '60px')}</TableCell>
-                                <TableCell className='p-2 border-r border-gray-700'>{renderCell(row, index, 'movement', '60px')}</TableCell>
+                                <TableCell className='p-2 border-r-2 border-white'>{renderCell(row, index, 'angle', '60px')}</TableCell>
+                                <TableCell className='p-2 border-r-2 border-white'>{renderCell(row, index, 'movement', '60px')}</TableCell>
                                 <TableCell className='p-2'>{renderCell(row, index, 'script', '240px')}</TableCell>
                             </TableRow>
                         ))}
