@@ -189,7 +189,7 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
 
                     <TableBody>
                         {data.map((row, index) => (
-                            <TableRow key={row.id} className={`border-b-2 border-white ${index === highlightedIndex ? 'bg-slate-800 highlighted-row' : 'bg-black'}`}>
+                            <TableRow key={row.id} className={`border-b-2 border-white ${index === highlightedIndex ? 'bg-teal-800 highlighted-row' : 'bg-black'}`}>
                             {/* <TableRow key={row.id} className={`border-b-2 border-white bg-black`}> */}
                                 <TableCell className='p-2 border-r-2 border-white'>{renderCell(row, index, 'shot', '60px')}</TableCell>
                                 <TableCell className='p-2 border-r-2 border-white' style={{ width: '120px' }}>
