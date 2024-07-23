@@ -7,13 +7,14 @@ import ImageUpload from './ImageUpload';
 import { saveAs } from 'file-saver';
 
 
-const StoryboardTable = forwardRef(({ data, setData }, ref) => {
+const StoryboardTable = forwardRef(({ data, setData, videoRecorderRef }, ref) => {
     const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const [editMode, setEditMode] = useState(false);
     const containerRef = useRef(null);
     const scrollAnimationRef = useRef(null);
     const intervalRef = useRef(null);
     const recording = useRef(false);
+    const stopRecordFn = useRef(null);
 
     useImperativeHandle(ref, () => ({
         startAutoScroll: () => {
@@ -23,6 +24,11 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
             const scrollNext = (index) => {
                 if (index >= data.length) {
                     recording.current = false;
+                    setHighlightedIndex(-1);
+                    console.log(stopRecordFn?.current);
+                    if (stopRecordFn?.current) {
+                        stopRecordFn?.current();
+                    }
                     return;
                 }
 
@@ -51,7 +57,10 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
             smoothScroll(containerRef.current, 0, 500);
             setHighlightedIndex(0);
         },
-        getContainer: () => containerRef.current
+        getContainer: () => containerRef.current,
+        setStopRecordFn: (fn) => {
+            stopRecordFn.current = fn;
+        }
     }));
 
     const smoothScroll = (element, to, duration) => {

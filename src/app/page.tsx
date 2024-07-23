@@ -11,6 +11,7 @@ const VideoRecorder = dynamic(() => import('../components/VideoRecorder'), { ssr
 export default function Home() {
   const [data, setData] = useState([])
   const tableRef = useRef(null)
+  const videoRecorderRef = useRef(null)
 
   const handleFileUpload = (excelData) => {
     setData(excelData)
@@ -27,7 +28,7 @@ export default function Home() {
             <FileUpload onUpload={handleFileUpload} />
             <VideoRecorder tableRef={tableRef} />
           </div>
-          <StoryboardTable data={data} setData={setData} ref={tableRef} />
+          <StoryboardTable data={data} setData={setData} ref={tableRef} videoRecorderRef={videoRecorderRef} />
         </CardContent>
       </Card>
     </main>

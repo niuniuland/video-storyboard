@@ -33,12 +33,14 @@ const VideoRecorder = ({ tableRef }) => {
 
     const startRecording = () => {
         setIsRecording(true);
+        tableRef.current.setStopRecordFn(stopRecording)
         framesRef.current = [];
         tableRef.current.startAutoScroll();
         recordingInterval.current = setInterval(captureFrame, 100); // Capture 10 frames per second
     };
 
     const stopRecording = async () => {
+        console.log('stopRecording');
         setIsRecording(false);
         clearInterval(recordingInterval.current);
         tableRef.current.stopAutoScroll();
