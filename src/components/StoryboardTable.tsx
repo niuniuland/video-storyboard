@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 
 
 const StoryboardTable = forwardRef(({ data, setData }, ref) => {
-    const [highlightedIndex, setHighlightedIndex] = useState(0);
+    const [highlightedIndex, setHighlightedIndex] = useState(-1);
     const [editMode, setEditMode] = useState(false);
     const containerRef = useRef(null);
     const scrollAnimationRef = useRef(null);
@@ -16,44 +16,38 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
     const recording = useRef(false);
 
     useImperativeHandle(ref, () => ({
-        scrollToNext: () => {
-            if (highlightedIndex < data.length - 1) {
-                setHighlightedIndex(highlightedIndex + 1);
-            }
-        },
         startAutoScroll: () => {
+            toggleEditMode(false);
             recording.current = true;
             setHighlightedIndex(0);
-            setTimeout(() => {
-                setHighlightedIndex(1);
+            const scrollNext = (index) => {
+                if (index >= data.length) {
+                    recording.current = false;
+                    return;
+                }
+
+                const duration = parseInt(data[index - 1].duration) || 120; // 默认2秒
+                const seconds = Math.floor(duration / 60) + (duration % 60) / 60;
+                console.log(`第 ${index + 1} 行停留 ${seconds}s`)
+
                 setTimeout(() => {
-                    setHighlightedIndex(2);
-                }, 2000);
-            }, 2000);
-            setTimeout(() => {
-                intervalRef.current = setInterval(() => {
-                    setHighlightedIndex((prevIndex) => {
-                        const nextIndex = prevIndex + 1;
-                        if (nextIndex >= 2) {
-                            const row = containerRef.current.querySelector(`tr:nth-child(${nextIndex + 1})`);
+                    setHighlightedIndex(index);
+                    if (recording.current) {
+                        if (index >= 2) {
+                            const row = containerRef.current.querySelector(`tr:nth-child(${index + 1})`);
                             if (row) {
-                                smoothScroll(containerRef.current, row.offsetTop, 500);
+                                smoothScroll(containerRef.current, row.offsetTop, 100);
                             }
                         }
-                        return nextIndex;
-                    });
-
-                    if (highlightedIndex >= data.length - 1) {
-                        clearInterval(intervalRef.current);
+                        scrollNext(index + 1);
                     }
-                }, 2000);
-            }, 4000);
+                }, Math.ceil(seconds * 1000));
+            };
+
+            scrollNext(1);
         },
         stopAutoScroll: () => {
             recording.current = false;
-            if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-            }
             smoothScroll(containerRef.current, 0, 500);
             setHighlightedIndex(0);
         },
@@ -79,8 +73,8 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
         scrollAnimationRef.current = requestAnimationFrame(animateScroll);
     };
 
-    const toggleEditMode = () => {
-        setEditMode(!editMode);
+    const toggleEditMode = (isEdit?: boolean) => {
+        setEditMode(isEdit === undefined ? !editMode : isEdit);
     };
 
     const renderCell = (row, index, field, width) => {
@@ -139,6 +133,7 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
                 <td>${row.camera}</td>
                 <td>${row.movement}</td>
                 <td>${row.script}</td>
+                <td>${row.duration || 120}</td>
             </tr>`;
         });
 
@@ -156,7 +151,7 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
     return (
         <div className="overflow-hidden" style={{ height: 'calc(70vh - 100px)' }}>
             <div className="flex justify-between items-center mb-4">
-                <Button onClick={toggleEditMode} variant="outline" className="text-white border-white hover:bg-gray-700">
+                <Button onClick={() => toggleEditMode(!editMode)} variant="outline" className="text-white border-white hover:bg-gray-700">
                     {editMode ? <><Save className="mr-2 h-4 w-4" /> 保存</> : <><Edit className="mr-2 h-4 w-4" /> 编辑</>}
                 </Button>
                 <Button onClick={handleExportHTML} variant="outline" className="text-white border-white hover:bg-gray-700">
@@ -179,19 +174,19 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
                 <Table className="border-white">
                     <TableHeader className="sticky top-0 bg-black z-10">
                         <TableRow className="border-b-2 border-white text-lg">
-                            <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">镜号</TableHead>
+                            <TableHead style={{ width: '70px' }} className="text-gray-100 font-bold text-center">镜号</TableHead>
                             <TableHead style={{ width: '120px' }} className="text-gray-100 font-bold text-center">画面</TableHead>
-                            <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">景别</TableHead>
-                            <TableHead style={{ width: '60px' }} className="text-gray-100 font-bold text-center">运镜</TableHead>
-                            <TableHead style={{ width: '240px' }} className="text-gray-100 font-bold text-center">镜头分析</TableHead>
+                            <TableHead style={{ width: '70px' }} className="text-gray-100 font-bold text-center">景别</TableHead>
+                            <TableHead style={{ width: '70px' }} className="text-gray-100 font-bold text-center">运镜</TableHead>
+                            <TableHead className="text-gray-100 font-bold text-center">镜头分析</TableHead>
+                            {editMode && <TableHead style={{ width: '70px' }} className="text-gray-100 font-bold text-center">时长</TableHead>}
                         </TableRow>
                     </TableHeader>
 
                     <TableBody>
                         {data.map((row, index) => (
                             <TableRow key={row.id} className={`border-b-2 border-white ${index === highlightedIndex ? 'bg-teal-800 highlighted-row' : 'bg-black'}`}>
-                            {/* <TableRow key={row.id} className={`border-b-2 border-white bg-black`}> */}
-                                <TableCell className='p-2 border-r-2 border-white'>{renderCell(row, index, 'shot', '60px')}</TableCell>
+                                <TableCell className='p-2 border-r-2 border-white'>{renderCell(row, index, 'shot', '70px')}</TableCell>
                                 <TableCell className='p-2 border-r-2 border-white' style={{ width: '120px' }}>
                                     {editMode && !row.image && <ImageUpload onUpload={(url) => handleImageUpload(index, url)} />}
                                     {row.image && (
@@ -210,9 +205,10 @@ const StoryboardTable = forwardRef(({ data, setData }, ref) => {
                                         </div>
                                     )}
                                 </TableCell>
-                                <TableCell className='p-2 border-r-2 border-white'>{renderCell(row, index, 'angle', '60px')}</TableCell>
-                                <TableCell className='p-2 border-r-2 border-white'>{renderCell(row, index, 'movement', '60px')}</TableCell>
-                                <TableCell className='p-2'>{renderCell(row, index, 'script', '240px')}</TableCell>
+                                <TableCell className='p-2 border-r-2 border-white'>{renderCell(row, index, 'angle', '70px')}</TableCell>
+                                <TableCell className='p-2 border-r-2 border-white'>{renderCell(row, index, 'movement', '70px')}</TableCell>
+                                <TableCell className={`p-2 ${editMode && 'border-r-2 border-white'}`}>{renderCell(row, index, 'script')}</TableCell>
+                                {editMode && <TableCell className='p-2'>{renderCell(row, index, 'duration', '70px')}</TableCell>}
                             </TableRow>
                         ))}
                     </TableBody>

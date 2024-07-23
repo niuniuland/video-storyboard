@@ -11,6 +11,7 @@ const FileUpload = ({ onUpload }) => {
             camera: row['机位'] || '',
             movement: row['运镜'] || '',
             script: row['镜头分析'] || '',
+            duration: row['时长'] || 120,
             image: ''  // Excel 不包含图片，所以我们初始化为空字符串
         }))
     }
