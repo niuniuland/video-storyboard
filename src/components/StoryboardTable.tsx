@@ -22,7 +22,7 @@ const StoryboardTable = forwardRef(({ data, setData, videoRecorderRef }, ref) =>
             recording.current = true;
             setHighlightedIndex(0);
             const scrollNext = (index) => {
-                if (index >= data.length) {
+                if (index >= data.length + 1) {
                     recording.current = false;
                     setHighlightedIndex(-1);
                     console.log(stopRecordFn?.current);
